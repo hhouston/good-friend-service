@@ -1,0 +1,94 @@
+{
+  "name": "photo-service",
+  "version": "0.8.0",
+  "description": "service for photo webpage",
+  "main": "index.js",
+  "files": [
+    "yarn.lock",
+    "index.js",
+    "server.js",
+    "config/!(env|local)*"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "clean": "del dist",
+    "build": "npm-run-all --parallel build:*",
+    "prebuild": "npm-run-all clean",
+    "build:index": "babel --source-maps --out-dir dist index.js",
+    "build:lib": "babel --source-maps --ignore='**/*.spec.js' --out-dir dist/lib lib",
+    "build:server": "babel --source-maps --ignore='**/*.spec.js' --out-file dist/server.js server.js",
+    "dist": "npm-run-all build",
+    "server": "babel-node server.js",
+    "server:prod": "pm2 start dist/server.js",
+    "server:watch": "nodemon --exec babel-node server.js"
+  },
+  "babel": {
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "node": "current"
+          }
+        }
+      ]
+    ]
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "**/*.spec.js",
+      "test/",
+      "tmp/"
+    ]
+  },
+  "engines": {
+    "node": ">=10.13.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hhouston/photo-service.git"
+  },
+  "keywords": [
+    "photo"
+  ],
+  "author": "hunter houston",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hhouston/photo-service/issues"
+  },
+  "homepage": "https://github.com/hhouston/photo-service#readme",
+  "dependencies": {
+    "@meltwater/mlabs-logger": "^5.3.0",
+    "apollo-server": "^2.4.8",
+    "apollo-server-koa": "^2.4.8",
+    "apollo-upload-server": "^7.1.0",
+    "awilix": "^4.2.1",
+    "awilix-koa": "^3.1.0",
+    "aws-sdk": "^2.443.0",
+    "boom": "^7.3.0",
+    "config": "^3.1.0",
+    "crypto-js": "^3.1.9-1",
+    "graphql": "^14.1.1",
+    "graphql-tag": "^2.10.1",
+    "graphql-tools": "^4.0.4",
+    "jsonwebtoken": "^8.5.1",
+    "koa": "^2.7.0",
+    "mongodb": "^3.2.2",
+    "nanoid": "^2.0.1",
+    "nodemailer": "^6.1.1",
+    "nodemon": "^1.18.10",
+    "npm-run-all": "^4.1.5",
+    "ramda": "^0.26.1",
+    "source-map-support": "^0.5.11",
+    "stripe": "^6.31.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.3.4",
+    "@babel/node": "^7.2.2",
+    "@babel/preset-env": "^7.3.4",
+    "@babel/register": "^7.0.0",
+    "del": "^4.1.0",
+    "del-cli": "^1.1.0"
+  }
+}

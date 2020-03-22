@@ -1,0 +1,18 @@
+{
+  "port": 9000,
+  "mongo": {
+    "url": "mongodb://localhost:27017",
+    "auth": {
+      "user": "test",
+      "password": "pass"
+    }
+  },
+  "cloudfront": {
+    "baseUrl": "https://d3gaqejqo5el7.cloudfront.net",
+    "securityKey": null
+  },
+  "s3": {
+    "accessKeyId": null,
+    "secretAccessKey": null
+  }
+}
