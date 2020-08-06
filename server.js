@@ -19,6 +19,7 @@ const dependencies = createDependencies()
 const app = new Koa()
 const jwtToken = config.get('jwtToken')
 const burstCoupon = config.get('burstCoupon')
+const port = config.get('port')
 app.use(cors())
 
 const server = new ApolloServer({
@@ -41,6 +42,6 @@ const server = new ApolloServer({
 
 server.applyMiddleware({ app })
 
-app.listen({ port: 9000 }, () =>
-  console.log(`🚀 Server ready at http://localhost:9000${server.graphqlPath}`),
+app.listen({ port }, () =>
+  console.log(`🚀 Server ready at http://localhost:${port}${server.graphqlPath}`),
 )
