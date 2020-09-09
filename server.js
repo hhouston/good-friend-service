@@ -24,7 +24,11 @@ const app = new Koa()
 const jwtToken = config.get('jwtToken')
 const burstCoupon = config.get('burstCoupon')
 const port = config.get('port')
-app.use(cors())
+var options = {
+    origin: '*'
+};
+
+app.use(cors(options))
 
 const server = new ApolloServer({
   typeDefs,
