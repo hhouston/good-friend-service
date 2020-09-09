@@ -1,7 +1,11 @@
 import Koa from 'koa'
 import { apolloUploadKoa } from 'apollo-upload-server'
 
-import { ApolloServer, gql, GraphQLUpload } from 'apollo-server-koa'
+import {
+  ApolloServer,
+  gql,
+  GraphQLUpload
+} from 'apollo-server-koa'
 import cors from '@koa/cors'
 
 import config from 'config'
@@ -30,6 +34,16 @@ const server = new ApolloServer({
       Photo: dependencies.resolve('Photo'),
       Upload: GraphQLUpload
    },
+   onHealthCheck: () => {
+      return new Promise((resolve, reject) => {
+        // Replace the `true` in this conditional with more specific checks!
+        if (true) {
+          resolve();
+        } else {
+          reject();
+        }
+      });
+    },
    formatError: error => {
       console.log(error);
       return new Error('Internal server error');
