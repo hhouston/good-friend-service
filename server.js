@@ -25,16 +25,17 @@ const jwtToken = config.get('jwtToken')
 const burstCoupon = config.get('burstCoupon')
 const port = config.get('port')
 var options = {
-    origin: 'https://thankyougift.io'
+    // origin: 'http://localhost:3000'
+    // origin: 'https://thankyougift.io'
 };
-/*app.use(async (ctx, next) => {
-  ctx.set('Access-Control-Allow-Origin', '*');
+app.use(async (ctx, next) => {
+  ctx.set('Access-Control-Allow-Origin', 'https://thankyougift.io');
   ctx.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   ctx.set('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, OPTIONS');
   await next();
-});*/
-// app.use(cors())
-app.use(cors(options))
+});
+app.use(cors())
+// app.use(cors(options))
 
 const server = new ApolloServer({
   typeDefs,
