@@ -47,7 +47,7 @@ const server = new ApolloServer({
     },
    formatError: err => {
       console.log(err);
-      return new Error({ err }, 'Internal server error');
+      return new Error(err);
     },
    uploads: {
       maxFileSize: 2000000000,
