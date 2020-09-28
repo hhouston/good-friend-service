@@ -24,18 +24,8 @@ const app = new Koa()
 const jwtToken = config.get('jwtToken')
 const burstCoupon = config.get('burstCoupon')
 const port = config.get('port')
-// var options = {
-//     origin: 'http://localhost:3000'
-//     origin: 'https://thankyougift.io'
-// };
-// app.use(async (ctx, next) => {
-//   ctx.set('Access-Control-Allow-Origin', '*');
-//   ctx.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-//   ctx.set('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, OPTIONS, HEAD');
-//   await next();
-// });
+
 app.use(cors())
-// app.use(cors(options))
 
 const server = new ApolloServer({
   typeDefs,
