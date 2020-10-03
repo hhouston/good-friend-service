@@ -46,7 +46,6 @@ const server = new ApolloServer({
       });
     },
    formatError: err => {
-      console.log(err);
       return new Error(err);
     },
    uploads: {
