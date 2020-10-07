@@ -9,5 +9,10 @@ yarn server:prod
 
 pm2 list
 pm2 stop
-pm2 restart
-pm2 delete
+pm2 restart <num of pod>
+pm2 start <num of pod>
+pm2 delete <num of pod>
+
+## Docker
+sudo systemctl enable docker.
+docker compose up -d
