@@ -16,7 +16,6 @@ import { scopePerRequest } from 'awilix-koa'
 import { typeDefs } from './lib/graphql'
 
 import { createDependencies } from './lib'
-import { MongoService } from './lib/services'
 
 const dependencies = createDependencies()
 
