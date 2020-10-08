@@ -16,11 +16,13 @@ import { scopePerRequest } from 'awilix-koa'
 import { typeDefs } from './lib/graphql'
 
 import { createDependencies } from './lib'
+import { validateToken } from './lib/services'
 
 const dependencies = createDependencies()
 
 const app = new Koa()
 const port = config.get('port')
+const jwtSecret = config.get('jwtSecret')
 
 app.use(cors())
 
@@ -32,6 +34,7 @@ const server = new ApolloServer({
       Photo: dependencies.resolve('Photo'),
       Upload: GraphQLUpload
    },
+   context: ({ ctx }) => validateToken({ jwtSecret, token: ctx.request.header }),
    onHealthCheck: () => {
       return new Promise((resolve, reject) => {
         // Replace the `true` in this conditional with more specific checks!
