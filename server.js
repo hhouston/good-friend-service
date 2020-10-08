@@ -34,7 +34,7 @@ const server = new ApolloServer({
       Photo: dependencies.resolve('Photo'),
       Upload: GraphQLUpload
    },
-   context: ({ ctx }) => validateToken({ jwtSecret, token: ctx.request.header }),
+   // context: ({ ctx }) => validateToken({ jwtSecret, token: ctx.request.header }),
    onHealthCheck: () => {
       return new Promise((resolve, reject) => {
         // Replace the `true` in this conditional with more specific checks!
