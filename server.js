@@ -1,4 +1,6 @@
 import Koa from 'koa'
+import Router from 'koa-router'
+import cors from '@koa/cors'
 import { apolloUploadKoa } from 'apollo-upload-server'
 
 import {
@@ -6,7 +8,6 @@ import {
   gql,
   GraphQLUpload
 } from 'apollo-server-koa'
-import cors from '@koa/cors'
 
 import config from 'config'
 
@@ -21,10 +22,20 @@ import { validateToken } from './lib/services'
 const dependencies = createDependencies()
 
 const app = new Koa()
+const router = new Router()
 const port = config.get('port')
 const jwtSecret = config.get('jwtSecret')
 
-app.use(cors())
+app
+  .use(cors())
+  .use(router.routes())
+  .use(router.allowedMethods())
+
+
+router.get('/login', (ctx, next) => {
+  // ctx.router available
+  console.log('login')
+})
 
 const server = new ApolloServer({
   typeDefs,
