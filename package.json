@@ -20,7 +20,8 @@
     "dist": "npm-run-all build",
     "server": "babel-node server.js",
     "server:prod": "pm2 start dist/server.js",
-    "server:watch": "nodemon --exec babel-node server.js"
+    "server:watch": "nodemon --exec babel-node server.js",
+    "format:pretty": "yarn prettier --write ."
   },
   "babel": {
     "presets": [
@@ -92,6 +93,7 @@
     "@babel/preset-env": "^7.3.4",
     "@babel/register": "^7.0.0",
     "del": "^4.1.0",
-    "del-cli": "^1.1.0"
+    "del-cli": "^1.1.0",
+    "prettier": "2.1.2"
   }
 }
