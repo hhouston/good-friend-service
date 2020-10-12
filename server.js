@@ -24,35 +24,26 @@ const router = new Router()
 const port = config.get('port')
 const jwtSecret = config.get('jwtSecret')
 
+router.post('/login', koaBody(), async (ctx) => {
+  const body = ctx.request.body
 
-  router.post('/login', koaBody(),
-    async ctx => {
-      const body = ctx.request.body
+  if (body.type == 'email') {
+    const { email } = body
+    const token = await UserService.login({ email })
+  }
 
-      if (body.type == 'email') {
-        const { email } = body
-        console.log(UserService);
-        const token = await UserService.login({ email })
-      }
+  ctx.body = { token }
+})
 
-      ctx.body = { token }
-    }
-  )
+router.post('/signup', koaBody(), (ctx) => {
+  const { type } = ctx.request.body
+  console.log('type: ', type)
+  ctx.body = {
+    jwtToken: 'asdfa'
+  }
+})
 
-  router.post('/signup', koaBody(),
-    ctx => {
-      const { type } = ctx.request.body
-      console.log('type: ', type)
-      ctx.body = {
-        jwtToken: 'asdfa'
-      }
-    }
-  )
-
-app
-  .use(cors())
-  .use(router.routes())
-  .use(router.allowedMethods())
+app.use(cors()).use(router.routes()).use(router.allowedMethods())
 
 const server = new ApolloServer({
   typeDefs,
