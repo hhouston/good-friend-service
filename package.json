@@ -76,6 +76,7 @@
     "graphql-tools": "^4.0.4",
     "jsonwebtoken": "^8.5.1",
     "koa": "^2.7.0",
+    "koa-body": "^4.2.0",
     "koa-router": "^9.4.0",
     "mongodb": "^3.2.2",
     "nanoid": "^2.0.1",

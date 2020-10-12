@@ -1,5 +1,6 @@
 import Koa from 'koa'
 import Router from 'koa-router'
+import koaBody from 'koa-body'
 import cors from '@koa/cors'
 import { apolloUploadKoa } from 'apollo-upload-server'
 
@@ -13,6 +14,7 @@ import { scopePerRequest } from 'awilix-koa'
 import { typeDefs } from './lib/graphql'
 
 import { createDependencies } from './lib'
+import { UserService } from './lib/services'
 import { validateToken } from './lib/services'
 
 const dependencies = createDependencies()
@@ -22,12 +24,35 @@ const router = new Router()
 const port = config.get('port')
 const jwtSecret = config.get('jwtSecret')
 
-app.use(cors()).use(router.routes()).use(router.allowedMethods())
 
-router.get('/login', (ctx, next) => {
-  // ctx.router available
-  console.log('login')
-})
+  router.post('/login', koaBody(),
+    async ctx => {
+      const body = ctx.request.body
+
+      if (body.type == 'email') {
+        const { email } = body
+        console.log(UserService);
+        const token = await UserService.login({ email })
+      }
+
+      ctx.body = { token }
+    }
+  )
+
+  router.post('/signup', koaBody(),
+    ctx => {
+      const { type } = ctx.request.body
+      console.log('type: ', type)
+      ctx.body = {
+        jwtToken: 'asdfa'
+      }
+    }
+  )
+
+app
+  .use(cors())
+  .use(router.routes())
+  .use(router.allowedMethods())
 
 const server = new ApolloServer({
   typeDefs,
