@@ -69,25 +69,26 @@ export const createRouter = () => {
     const mongoClient = createMongoClient({ url: mongo.url })
     const db = await mongoClient()
     const table = db.collection('user')
-    const { email, password, type } = ctx.request.body
+    const { email, password, type, firstName } = ctx.request.body
     const query = { email }
     const cursor = isNil(query) ? await table.find() : await table.find(query)
 
     const items = await cursor.toArray()
 
-    if (isEmpty(items)) {
-      console.log(`No user Found with Email: ${email}`)
-      ctx.body = { error: `No user Found with Email: ${email}` }
+    if (!isEmpty(items)) {
+      console.log(`Account with email ${email} already exists`)
+      ctx.body = { error: `Account with email ${email} already exists` }
       return
     }
 
-    const user = head(items)
-    const isValid = await bcrypt.compare(password, user.password)
-    if (!isValid) {
-      console.log(`Incorrect password`)
-      ctx.body = { error: 'Incorrect password' }
-      return
-    }
+    const saltedPassword = await bcrypt.hash(password, 12)
+    const userResp = await table.updateOne(query, {
+      $set: {
+        email,
+        password: saltedPassword,
+        firstName
+      }
+    })
 
     const token = signToken({ jwtSecret, email })
 
