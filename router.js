@@ -20,6 +20,7 @@ import jwt from 'jsonwebtoken'
 import nodemailer from 'nodemailer'
 import bcrypt from 'bcrypt'
 import { isNil, head, isEmpty } from 'ramda'
+import http from 'http'
 
 const router = new Router()
 const port = config.get('port')
@@ -41,60 +42,82 @@ export const createRouter = () => {
 
       const items = await cursor.toArray()
 
-      if (isEmpty(items)) {
+      if (isEmpty(items) && type == 'email') {
         console.log(`No user Found with Email: ${email}`)
         ctx.body = { error: `No user Found with Email: ${email}` }
         return
+      } else if (type != 'email') {
+        await signUp3rdParty({ type })
       }
 
-      const user = head(items)
-      const isValid = await bcrypt.compare(password, user.password)
-      if (!isValid) {
-        console.log(`Incorrect password`)
-        ctx.body = { error: 'Incorrect password' }
+      if (type == 'email') {
+        const user = head(items)
+        const isValid = await bcrypt.compare(password, user.password)
+        if (!isValid) {
+          console.log(`Incorrect password`)
+          ctx.body = { error: 'Incorrect password' }
+          return
+        }
+
+        const token = signToken({ jwtSecret, email })
+
+        const { exp } = getTokenExpiry({ jwtSecret, token })
+
+        ctx.body = { token, expiresAt: exp }
         return
+      } else {
+        const { authorization } =  ctx.request.headers
+        if (isNil(authorization)) {
+          console.log(`Missing Auth Token`)
+          ctx.body = { error: 'Missing Auth Token' }
+          return
+        }
+
+        const accessToken = authorization.split(' ')[1]
+        await login3rdParty({ type, accessToken })
       }
 
-      const token = signToken({ jwtSecret, email })
-
-      const { exp } = getTokenExpiry({ jwtSecret, token })
-
-      ctx.body = { token, expiresAt: exp }
     } catch (err) {
       throw err
     }
   })
 
   router.post('/signup', koaBody(), async (ctx) => {
-    const mongoClient = createMongoClient({ url: mongo.url })
-    const db = await mongoClient()
-    const table = db.collection('user')
-    const { email, password, type, firstName } = ctx.request.body
-    const query = { email }
-    const cursor = isNil(query) ? await table.find() : await table.find(query)
+    try {
+      const mongoClient = createMongoClient({ url: mongo.url })
+      const db = await mongoClient()
+      const table = db.collection('user')
+      const { email, password, type, firstName } = ctx.request.body
 
-    const items = await cursor.toArray()
+      const query = { email }
+      const cursor = isNil(query) ? await table.find() : await table.find(query)
 
-    if (!isEmpty(items)) {
-      console.log(`Account with email ${email} already exists`)
-      ctx.body = { error: `Account with email ${email} already exists` }
-      return
-    }
+      const items = await cursor.toArray()
 
-    const saltedPassword = await bcrypt.hash(password, 12)
-    const userResp = await table.updateOne(query, {
-      $set: {
-        email,
-        password: saltedPassword,
-        firstName
+      if (!isEmpty(items)) {
+        console.log(`Account with email ${email} already exists`)
+        ctx.body = { error: `Account with email ${email} already exists` }
+        return
       }
-    })
 
-    const token = signToken({ jwtSecret, email })
+      const saltedPassword = await bcrypt.hash(password, 12)
+      const userResp = await table.updateOne(query, {
+        $set: {
+          email,
+          password: saltedPassword,
+          firstName
+        }
+      })
 
-    const { exp } = getTokenExpiry({ jwtSecret, token })
+      const token = signToken({ jwtSecret, email })
 
-    ctx.body = { token, expiresAt: exp }
+      const { exp } = getTokenExpiry({ jwtSecret, token })
+
+      ctx.body = { token, expiresAt: exp }
+    } catch(err) {
+      console.log('errr: ', err);
+      throw err
+    }
   })
 
   router.post('/reset', koaBody(), async (ctx) => {
@@ -137,3 +160,57 @@ export const createRouter = () => {
 
   return router
 }
+
+const signUp3rdParty = ({ type }) => {
+  try {
+    if ( type == 'google') {
+      const { authorization } =  ctx.request.headers
+      if (isNil(authorization)) {
+        console.log(`Missing Auth Token`)
+        ctx.body = { error: 'Missing Auth Token' }
+        return
+      }
+
+      const accessToken = authorization.split(' ')[1]
+      const { profile } = ctx.request.body
+      console.log('profile: ', profile)
+    } else if (type == 'facebook') {
+      console.log('facebook');
+    }
+  } catch (err) {
+
+    throw err
+  }
+}
+
+const login3rdParty = ({ type, authToken }) => {
+  try {
+    if ( type == 'google') {
+      const { authorization } =  ctx.request.headers
+      if (isNil(authorization)) {
+        console.log(`Missing Auth Token`)
+        ctx.body = { error: 'Missing Auth Token' }
+        return
+      }
+
+      const accessToken = authorization.split(' ')[1]
+      const { profile } = ctx.request.body
+      console.log('profile: ', profile)
+    } else if (type == 'facebook') {
+      console.log('facebook');
+    }
+  } catch (err) {
+
+    throw err
+  }
+}
+
+// const userSpec = {
+//   email: prop('email'),
+//   password: prop('password'),
+//   firstName: prop('firstName'),
+//   lastName: prop('lastName'),
+//   birthday: prop('birthday'),
+//   subscription: prop('subscription'),
+//   type: prop('type')
+// }
