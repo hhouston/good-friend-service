@@ -31,7 +31,7 @@ import { createRouter } from './router'
 const router = createRouter()
 app.use(cors()).use(router.routes()).use(router.allowedMethods())
 
-const server = new ApolloServer({
+export const server = new ApolloServer({
   typeDefs,
   resolvers: {
     Query: dependencies.resolve('Query'),

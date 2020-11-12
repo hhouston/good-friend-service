@@ -47,7 +47,11 @@ export const createRouter = () => {
         ctx.body = { error: `No user Found with Email: ${email}` }
         return
       } else if (type != 'email') {
-        await signUp3rdParty({ type })
+        console.log('ctx:', ctx.request.body);
+        const { profile } = ctx.request.body
+        console.log('google profile', profile);
+
+        // await signUp3rdParty({ type, profile })
       }
 
       if (type == 'email') {
@@ -161,19 +165,14 @@ export const createRouter = () => {
   return router
 }
 
-const signUp3rdParty = ({ type }) => {
+const signUp3rdParty = ({ type, profile }) => {
   try {
     if ( type == 'google') {
-      const { authorization } =  ctx.request.headers
-      if (isNil(authorization)) {
-        console.log(`Missing Auth Token`)
-        ctx.body = { error: 'Missing Auth Token' }
-        return
-      }
-
-      const accessToken = authorization.split(' ')[1]
-      const { profile } = ctx.request.body
       console.log('profile: ', profile)
+      const mongoClient = createMongoClient({ url: mongo.url })
+      const db = await mongoClient()
+      const table = db.collection('user')
+
     } else if (type == 'facebook') {
       console.log('facebook');
     }
@@ -183,19 +182,9 @@ const signUp3rdParty = ({ type }) => {
   }
 }
 
-const login3rdParty = ({ type, authToken }) => {
+const login3rdParty = ({ type, accessToken }) => {
   try {
     if ( type == 'google') {
-      const { authorization } =  ctx.request.headers
-      if (isNil(authorization)) {
-        console.log(`Missing Auth Token`)
-        ctx.body = { error: 'Missing Auth Token' }
-        return
-      }
-
-      const accessToken = authorization.split(' ')[1]
-      const { profile } = ctx.request.body
-      console.log('profile: ', profile)
     } else if (type == 'facebook') {
       console.log('facebook');
     }

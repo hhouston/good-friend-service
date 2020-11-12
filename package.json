@@ -1,7 +1,7 @@
 {
-  "name": "photo-service",
+  "name": "good-friend-service",
   "version": "0.8.0",
-  "description": "service for photo webpage",
+  "description": "service for thank you gift UI",
   "main": "index.js",
   "files": [
     "yarn.lock",
@@ -10,7 +10,8 @@
     "config/!(env|local)*"
   ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "nyc ava",
+    "test:update": "ava --update-snapshots",
     "clean": "del dist",
     "build": "npm-run-all --parallel build:*",
     "prebuild": "npm-run-all clean",
@@ -21,7 +22,8 @@
     "server": "babel-node server.js",
     "server:prod": "pm2 start dist/server.js",
     "server:watch": "nodemon --exec babel-node server.js",
-    "format:pretty": "yarn prettier --write ."
+    "format:pretty": "yarn prettier --write .",
+    "report": "nyc report"
   },
   "babel": {
     "presets": [
@@ -33,6 +35,25 @@
           }
         }
       ]
+    ]
+  },
+  "nyc": {
+  "exclude": [
+      "**/index.js",
+      "server.js",
+      "lib/app.js",
+      "lib/dependencies.js",
+      "config/**/*.js",
+      "dist/**/*.js",
+      "package/**/*.js",
+      "examples/**/*.js",
+      "**/*.test.js",
+      "**/*.spec.js"
+    ],
+    "reporter": [
+      "html",
+      "lcov",
+      "text"
     ]
   },
   "nodemonConfig": {
@@ -50,7 +71,7 @@
     "url": "git+https://github.com/hhouston/photo-service.git"
   },
   "keywords": [
-    "photo"
+    "gift"
   ],
   "author": "hunter houston",
   "license": "ISC",
@@ -95,8 +116,11 @@
     "@babel/node": "^7.2.2",
     "@babel/preset-env": "^7.3.4",
     "@babel/register": "^7.0.0",
+    "ava": "^3.13.0",
     "del": "^4.1.0",
     "del-cli": "^1.1.0",
+    "nock": "^13.0.4",
+    "nyc": "^15.1.0",
     "prettier": "2.1.2"
   }
 }
