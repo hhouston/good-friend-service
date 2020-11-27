@@ -46,12 +46,6 @@ export const createRouter = () => {
         console.log(`No user Found with Email: ${email}`)
         ctx.body = { error: `No user Found with Email: ${email}` }
         return
-      } else if (type != 'email') {
-        console.log('ctx:', ctx.request.body);
-        const { profile } = ctx.request.body
-        console.log('google profile', profile);
-
-        // await signUp3rdParty({ type, profile })
       }
 
       if (type == 'email') {
@@ -61,7 +55,7 @@ export const createRouter = () => {
           console.log(`Incorrect password`)
           ctx.body = { error: 'Incorrect password' }
           return
-        }
+         }
 
         const token = signToken({ jwtSecret, email })
 
@@ -69,16 +63,6 @@ export const createRouter = () => {
 
         ctx.body = { token, expiresAt: exp }
         return
-      } else {
-        const { authorization } =  ctx.request.headers
-        if (isNil(authorization)) {
-          console.log(`Missing Auth Token`)
-          ctx.body = { error: 'Missing Auth Token' }
-          return
-        }
-
-        const accessToken = authorization.split(' ')[1]
-        await login3rdParty({ type, accessToken })
       }
 
     } catch (err) {
@@ -164,42 +148,3 @@ export const createRouter = () => {
 
   return router
 }
-
-const signUp3rdParty = ({ type, profile }) => {
-  try {
-    if ( type == 'google') {
-      console.log('profile: ', profile)
-      const mongoClient = createMongoClient({ url: mongo.url })
-      const db = await mongoClient()
-      const table = db.collection('user')
-
-    } else if (type == 'facebook') {
-      console.log('facebook');
-    }
-  } catch (err) {
-
-    throw err
-  }
-}
-
-const login3rdParty = ({ type, accessToken }) => {
-  try {
-    if ( type == 'google') {
-    } else if (type == 'facebook') {
-      console.log('facebook');
-    }
-  } catch (err) {
-
-    throw err
-  }
-}
-
-// const userSpec = {
-//   email: prop('email'),
-//   password: prop('password'),
-//   firstName: prop('firstName'),
-//   lastName: prop('lastName'),
-//   birthday: prop('birthday'),
-//   subscription: prop('subscription'),
-//   type: prop('type')
-// }
