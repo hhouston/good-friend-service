@@ -33,7 +33,8 @@ export const createRouter = () => {
 
   router.post('/login', koaBody(), async (ctx) => {
     try {
-      const mongoClient = createMongoClient({ url: mongo.url })
+      console.log('Login User: Start');
+      const mongoClient = createMongoClient(mongo)
       const db = await mongoClient()
       const table = db.collection('user')
       const { email, password, type } = ctx.request.body
@@ -41,29 +42,27 @@ export const createRouter = () => {
       const cursor = isNil(query) ? await table.find() : await table.find(query)
 
       const items = await cursor.toArray()
-
-      if (isEmpty(items) && type == 'email') {
+      if (isEmpty(items)) {
         console.log(`No user Found with Email: ${email}`)
         ctx.body = { error: `No user Found with Email: ${email}` }
         return
       }
 
-      if (type == 'email') {
-        const user = head(items)
-        const isValid = await bcrypt.compare(password, user.password)
-        if (!isValid) {
-          console.log(`Incorrect password`)
-          ctx.body = { error: 'Incorrect password' }
-          return
-         }
-
-        const token = signToken({ jwtSecret, email })
-
-        const { exp } = getTokenExpiry({ jwtSecret, token })
-
-        ctx.body = { token, expiresAt: exp }
+      const user = head(items)
+      const isValid = await bcrypt.compare(password, user.password)
+      if (!isValid) {
+        console.log(`Incorrect password`)
+        ctx.body = { error: 'Incorrect password' }
         return
-      }
+       }
+
+      const token = signToken({ jwtSecret, email })
+
+      const { exp } = getTokenExpiry({ jwtSecret, token })
+
+      ctx.body = { token, expiresAt: exp }
+      return
+
 
     } catch (err) {
       throw err
@@ -72,7 +71,8 @@ export const createRouter = () => {
 
   router.post('/signup', koaBody(), async (ctx) => {
     try {
-      const mongoClient = createMongoClient({ url: mongo.url })
+      console.log('Sign Up User: Start');
+      const mongoClient = createMongoClient(mongo)
       const db = await mongoClient()
       const table = db.collection('user')
       const { email, password, type, firstName } = ctx.request.body
@@ -88,13 +88,15 @@ export const createRouter = () => {
         return
       }
 
+      const genId = createGenId()
+      const userId = genId()
       const saltedPassword = await bcrypt.hash(password, 12)
-      const userResp = await table.updateOne(query, {
-        $set: {
-          email,
-          password: saltedPassword,
-          firstName
-        }
+
+      const userResp = await table.insertOne({
+        id: userId,
+        email,
+        password: saltedPassword,
+        firstName
       })
 
       const token = signToken({ jwtSecret, email })
@@ -110,8 +112,9 @@ export const createRouter = () => {
 
   router.post('/reset', koaBody(), async (ctx) => {
     try {
+      console.log('Reset Password: Start');
       const { email } = ctx.request.body
-      const mongoClient = createMongoClient({ url: mongo.url })
+      const mongoClient = createMongoClient(mongo)
       const db = await mongoClient()
 
       const table = db.collection('user')
