@@ -37,6 +37,7 @@ export const server = new ApolloServer({
     Query: dependencies.resolve('Query'),
     Mutation: dependencies.resolve('Mutation'),
     Photo: dependencies.resolve('Photo'),
+    Event: dependencies.resolve('Event'),
     Upload: GraphQLUpload
   },
   context: async ({ ctx }) => {
