@@ -58,9 +58,9 @@ export const createRouter = () => {
 
       const token = signToken({ jwtSecret, email })
 
-      const { exp } = getTokenExpiry({ jwtSecret, token, userId: user.id })
+      const { exp } = getTokenExpiry({ jwtSecret, token })
 
-      ctx.body = { token, expiresAt: exp }
+      ctx.body = { token, expiresAt: exp,  userId: user.id }
       return
 
 
@@ -101,9 +101,9 @@ export const createRouter = () => {
 
       const token = signToken({ jwtSecret, email })
 
-      const { exp } = getTokenExpiry({ jwtSecret, token, userId })
+      const { exp } = getTokenExpiry({ jwtSecret, token })
 
-      ctx.body = { token, expiresAt: exp }
+      ctx.body = { token, expiresAt: exp, userId }
     } catch(err) {
       console.log('errr: ', err);
       throw err
