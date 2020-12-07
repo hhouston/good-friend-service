@@ -75,7 +75,7 @@ const createRouter = () => {
       const mongoClient = createMongoClient(mongo)
       const db = await mongoClient()
       const table = db.collection('user')
-      const { email, password, type, firstName } = ctx.request.body
+      const { email, password, type, firstName, phone, zipCode } = ctx.request.body
 
       const query = { email }
       const cursor = isNil(query) ? await table.find() : await table.find(query)
@@ -96,7 +96,9 @@ const createRouter = () => {
         id: userId,
         email,
         password: saltedPassword,
-        firstName
+        firstName,
+        phone,
+        zipCode
       })
 
       const token = signToken({ jwtSecret, email })
