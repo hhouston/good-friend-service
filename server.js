@@ -149,6 +149,27 @@ const createRouter = () => {
     }
   })
 
+  router.post('/contact', koaBody(), async (ctx) => {
+    try {
+      console.log('Contact Us: Start');
+      const { email, name, message } = ctx.request.body
+
+      const transporter = nodemailer.createTransport(mailerConfig)
+
+      const info = await transporter.sendMail({
+        from: '"Thank You Gift" <support@thankyougift.io>',
+        to: 'hmhouston7@gmail.com',
+        subject: `Contact Us: ${name}`,
+        html: `<p>${email}</p><p>${message}</p>`
+
+      })
+
+      ctx.body = { message, email }
+    } catch (err) {
+      throw err
+    }
+  })
+
   return router
 }
 
