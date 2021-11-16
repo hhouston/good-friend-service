@@ -86,7 +86,7 @@
     "apollo-upload-server": "^7.1.0",
     "awilix": "^4.2.1",
     "awilix-koa": "^3.1.0",
-    "aws-sdk": "^2.443.0",
+    "aws-sdk": "^2.814.0",
     "bcrypt": "^5.0.0",
     "boom": "^7.3.0",
     "config": "^3.1.0",
