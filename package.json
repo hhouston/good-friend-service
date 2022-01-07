@@ -1,6 +1,6 @@
 {
   "name": "good-friend-service",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "service for thank you gift UI",
   "main": "index.js",
   "files": [
