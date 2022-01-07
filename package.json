@@ -38,7 +38,7 @@
     ]
   },
   "nyc": {
-  "exclude": [
+    "exclude": [
       "**/index.js",
       "server.js",
       "lib/app.js",
