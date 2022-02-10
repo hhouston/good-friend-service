@@ -6,6 +6,8 @@ import { apolloUploadKoa } from 'apollo-upload-server'
 import { ApolloServer, gql, GraphQLUpload } from 'apollo-server-koa'
 import { createContainer } from 'awilix'
 import { scopePerRequest } from 'awilix-koa'
+import fetch from 'node-fetch';
+
 
 import config from 'config'
 import jwt from 'jsonwebtoken'
@@ -54,15 +56,58 @@ const createRouter = () => {
         console.log(`Incorrect password`)
         ctx.body = { error: 'Incorrect password' }
         return
-       }
+      }
 
       const token = signToken({ jwtSecret, email })
 
       const { exp } = getTokenExpiry({ jwtSecret, token })
 
-      ctx.body = { token, expiresAt: exp,  userId: user.id }
+      ctx.body = { token, expiresAt: exp, userId: user.id }
       return
 
+
+    } catch (err) {
+      throw err
+    }
+  })
+
+  router.post('/facebook-login', koaBody(), async (ctx) => {
+    try {
+      console.log('Login User: Start');
+      const mongoClient = createMongoClient(mongo)
+      const db = await mongoClient()
+      const table = db.collection('user')
+      const { userID, accessToken } = ctx.request.body
+
+      const url = `https://graph.facebook.com/v2.11/${userID}/?fields=id,name,email&access_token=${accessToken}`;
+
+      const response = await fetch(url);
+
+      const { email, name } = response;
+      const query = { email }
+      const cursor = isNil(query) ? await table.find() : await table.find(query)
+
+      const items = await cursor.toArray()
+      let user;
+      if (isEmpty(items)) {
+        const genId = createGenId()
+        const userId = genId()
+
+        await table.insertOne({
+          id: userId,
+          email,
+          firstName: name,
+        })
+        user = { id: userId };
+      }
+      else {
+        user = head(items)
+      }
+
+      const token = signToken({ jwtSecret, email })
+      const { exp } = getTokenExpiry({ jwtSecret, token })
+      ctx.body = { token, expiresAt: exp, userId: user.id }
+      return
 
     } catch (err) {
       throw err
@@ -106,7 +151,7 @@ const createRouter = () => {
       const { exp } = getTokenExpiry({ jwtSecret, token })
 
       ctx.body = { token, expiresAt: exp, userId }
-    } catch(err) {
+    } catch (err) {
       console.log('errr: ', err);
       throw err
     }
