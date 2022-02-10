@@ -1,5 +1,9 @@
 {
   "port": 9000,
+  "jwtSecret": "4a3d49bb7a7feb8abff6da756254bcd83d74cfa4",
+  "mailerConfig": {},
+  "saltRounds": "",
+  "stripeApiKey": "",
   "mongo": {
     "url": "mongodb://localhost:27017",
     "auth": {
