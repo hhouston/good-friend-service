@@ -25,6 +25,59 @@
     "format:pretty": "yarn prettier --write .",
     "report": "nyc report"
   },
+  "author": "hunter houston",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hhouston/photo-service/issues"
+  },
+  "homepage": "https://github.com/hhouston/photo-service#readme",
+  "dependencies": {
+    "@meltwater/mlabs-logger": "^5.3.0",
+    "@sentry/node": "^6.17.6",
+    "@sentry/tracing": "^6.17.6",
+    "apollo-server": "^2.4.8",
+    "apollo-server-koa": "^2.4.8",
+    "apollo-upload-server": "^7.1.0",
+    "awilix": "^4.2.1",
+    "awilix-koa": "^3.1.0",
+    "aws-sdk": "^2.443.0",
+    "bcrypt": "^5.0.0",
+    "boom": "^7.3.0",
+    "config": "^3.1.0",
+    "crypto-js": "^3.1.9-1",
+    "email-templates": "^7.1.1",
+    "fbgraph": "^1.4.4",
+    "graphql": "^14.1.1",
+    "graphql-tag": "^2.10.1",
+    "graphql-tools": "^4.0.4",
+    "jsonwebtoken": "^8.5.1",
+    "koa": "^2.7.0",
+    "koa-body": "^4.2.0",
+    "koa-router": "^9.4.0",
+    "mongodb": "^3.2.2",
+    "nanoid": "^2.0.1",
+    "nodemailer": "^6.4.13",
+    "nodemon": "^1.18.10",
+    "npm-run-all": "^4.1.5",
+    "pug": "^3.0.0",
+    "ramda": "^0.26.1",
+    "source-map-support": "^0.5.11",
+    "stripe": "^6.31.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.3.4",
+    "@babel/node": "^7.2.2",
+    "@babel/preset-env": "^7.3.4",
+    "@babel/register": "^7.0.0",
+    "@sentry/webpack-plugin": "^1.18.5",
+    "ava": "^3.13.0",
+    "del": "^4.1.0",
+    "del-cli": "^1.1.0",
+    "nock": "^13.0.4",
+    "nyc": "^15.1.0",
+    "prettier": "2.1.2"
+  }
   "babel": {
     "presets": [
       [
@@ -73,54 +126,4 @@
   "keywords": [
     "gift"
   ],
-  "author": "hunter houston",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/hhouston/photo-service/issues"
-  },
-  "homepage": "https://github.com/hhouston/photo-service#readme",
-  "dependencies": {
-    "@meltwater/mlabs-logger": "^5.3.0",
-    "apollo-server": "^2.4.8",
-    "apollo-server-koa": "^2.4.8",
-    "apollo-upload-server": "^7.1.0",
-    "awilix": "^4.2.1",
-    "awilix-koa": "^3.1.0",
-    "aws-sdk": "^2.443.0",
-    "bcrypt": "^5.0.0",
-    "boom": "^7.3.0",
-    "config": "^3.1.0",
-    "crypto-js": "^3.1.9-1",
-    "email-templates": "^7.1.1",
-    "fbgraph": "^1.4.4",
-    "graphql": "^14.1.1",
-    "graphql-tag": "^2.10.1",
-    "graphql-tools": "^4.0.4",
-    "jsonwebtoken": "^8.5.1",
-    "koa": "^2.7.0",
-    "koa-body": "^4.2.0",
-    "koa-router": "^9.4.0",
-    "mongodb": "^3.2.2",
-    "nanoid": "^2.0.1",
-    "nodemailer": "^6.4.13",
-    "nodemon": "^1.18.10",
-    "npm-run-all": "^4.1.5",
-    "pug": "^3.0.0",
-    "ramda": "^0.26.1",
-    "source-map-support": "^0.5.11",
-    "stripe": "^6.31.2"
-  },
-  "devDependencies": {
-    "@babel/cli": "^7.2.3",
-    "@babel/core": "^7.3.4",
-    "@babel/node": "^7.2.2",
-    "@babel/preset-env": "^7.3.4",
-    "@babel/register": "^7.0.0",
-    "ava": "^3.13.0",
-    "del": "^4.1.0",
-    "del-cli": "^1.1.0",
-    "nock": "^13.0.4",
-    "nyc": "^15.1.0",
-    "prettier": "2.1.2"
-  }
 }

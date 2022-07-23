@@ -1,0 +1,12 @@
+const SentryCliPlugin = require('@sentry/webpack-plugin');
+
+const config = {
+  plugins: [
+    new SentryCliPlugin({
+      include: '.',
+      ignoreFile: '.sentrycliignore',
+      ignore: ['node_modules', 'webpack.config.js'],
+      configFile: 'sentry.properties',
+    }),
+  ],
+};

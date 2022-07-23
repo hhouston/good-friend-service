@@ -27,13 +27,13 @@ const jwtSecret = config.get('jwtSecret')
 const mongo = config.get('mongo')
 const mailerConfig = config.get('mailerConfig')
 
-// import { createRouter } from './router'
 const createRouter = () => {
   const router = new Router()
 
   router.post('/login', koaBody(), async (ctx) => {
     try {
-      console.log('Login User: Start');
+      console.log('Login User: Start')
+
       const mongoClient = createMongoClient(mongo)
       const db = await mongoClient()
       const table = db.collection('user')
@@ -54,16 +54,14 @@ const createRouter = () => {
         console.log(`Incorrect password`)
         ctx.body = { error: 'Incorrect password' }
         return
-       }
+      }
 
       const token = signToken({ jwtSecret, email })
 
       const { exp } = getTokenExpiry({ jwtSecret, token })
 
-      ctx.body = { token, expiresAt: exp,  userId: user.id }
+      ctx.body = { token, expiresAt: exp, userId: user.id }
       return
-
-
     } catch (err) {
       throw err
     }
@@ -71,11 +69,18 @@ const createRouter = () => {
 
   router.post('/signup', koaBody(), async (ctx) => {
     try {
-      console.log('Sign Up User: Start');
+      console.log('Sign Up User: Start')
       const mongoClient = createMongoClient(mongo)
       const db = await mongoClient()
       const table = db.collection('user')
-      const { email, password, type, firstName, phone, zipCode } = ctx.request.body
+      const {
+        email,
+        password,
+        type,
+        firstName,
+        phone,
+        zipCode
+      } = ctx.request.body
 
       const query = { email }
       const cursor = isNil(query) ? await table.find() : await table.find(query)
@@ -106,15 +111,15 @@ const createRouter = () => {
       const { exp } = getTokenExpiry({ jwtSecret, token })
 
       ctx.body = { token, expiresAt: exp, userId }
-    } catch(err) {
-      console.log('errr: ', err);
+    } catch (err) {
+      console.log('errr: ', err)
       throw err
     }
   })
 
   router.post('/reset', koaBody(), async (ctx) => {
     try {
-      console.log('Reset Password: Start');
+      console.log('Reset Password: Start')
       const { email } = ctx.request.body
       const mongoClient = createMongoClient(mongo)
       const db = await mongoClient()
@@ -153,7 +158,7 @@ const createRouter = () => {
 
   router.post('/contact', koaBody(), async (ctx) => {
     try {
-      console.log('Contact Us: Start');
+      console.log('Contact Us: Start')
       const { email, name, message } = ctx.request.body
 
       const transporter = nodemailer.createTransport(mailerConfig)
@@ -163,7 +168,6 @@ const createRouter = () => {
         to: 'hmhouston7@gmail.com',
         subject: `Contact Us: ${name}`,
         html: `<p>${email}</p><p>${message}</p>`
-
       })
 
       ctx.body = { message, email }
@@ -237,3 +241,36 @@ app.listen({ port }, () =>
     `🚀 Server ready at http://localhost:${port}${server.graphqlPath}`
   )
 )
+
+// // const Sentry = require('@sentry/node')
+// // or use es6 import statements
+// import * as Sentry from '@sentry/node'
+
+// // const Tracing = require('@sentry/tracing')
+// // or use es6 import statements
+// import * as Tracing from '@sentry/tracing'
+
+// Sentry.init({
+//   dsn:
+//     'https://3068aec7d3134b28904c1923b593feb7@o1140019.ingest.sentry.io/6196810',
+
+//   // Set tracesSampleRate to 1.0 to capture 100%
+//   // of transactions for performance monitoring.
+//   // We recommend adjusting this value in production
+//   tracesSampleRate: 1.0
+// })
+
+// const transaction = Sentry.startTransaction({
+//   op: 'test',
+//   name: 'My First Test Transaction'
+// })
+
+// setTimeout(() => {
+//   try {
+//     foo()
+//   } catch (e) {
+//     Sentry.captureException(e)
+//   } finally {
+//     transaction.finish()
+//   }
+// }, 99)
